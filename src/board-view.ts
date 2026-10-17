@@ -160,6 +160,9 @@ export class BoardView extends TextFileView {
   crumbs: { path: string; name: string }[] = [];
   pendingNav: string | null = null;
   pendingPos: { x: number; y: number } | null = null;
+  /** internal paste queued by the paste shortcut; the native `paste` event that
+   * follows cancels it when the system clipboard holds an image */
+  pendingInternalPaste: number | null = null;
 
   // manual double-click detection (pointer capture retargets native dblclick)
   lastClickAt = 0;
@@ -267,7 +270,7 @@ export class BoardView extends TextFileView {
         seg.setAttribute("title", "Double-click to rename");
         seg.addEventListener("dblclick", (e) => {
           e.preventDefault();
-          this.plugin.renameBoard(this);
+          if (this.file) this.plugin.renameBoard(this.file);
         });
       }
       if (!last) {
@@ -583,7 +586,11 @@ export class BoardView extends TextFileView {
     });
     this.registerDomEvent(this.viewportEl, "dragover", (e) => e.preventDefault());
     this.registerDomEvent(this.viewportEl, "drop", (e) => this.onDrop(e));
-    this.registerDomEvent(this.viewportEl, "paste", (e) => this.onPaste(e));
+    // on the document, not the viewport: with no editable element focused the
+    // browser may fire `paste` on <body> instead of the focused viewport
+    this.registerDomEvent(this.containerEl.doc, "paste", (e) => {
+      if (this.app.workspace.getActiveViewOfType(BoardView) === this) void this.onPaste(e);
+    });
 
     this.applyTransform();
     this.resizeObserver = new ResizeObserver(() => {
