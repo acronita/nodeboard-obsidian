@@ -1,6 +1,7 @@
 import { Menu } from "obsidian";
 import type { BoardView } from "./board-view";
 import type { Item } from "./types";
+import { CARD_TOOLS, MEDIA_TOOLS, type CardTool } from "./board-item-crud";
 
 export function onContextMenu(view: BoardView, e: MouseEvent) {
   if (view.drawMode) { e.preventDefault(); return; }
@@ -13,7 +14,11 @@ export function onContextMenu(view: BoardView, e: MouseEvent) {
   }
 
   const cardEl = target.closest<HTMLElement>(".mgn-card");
-  if (!cardEl?.dataset.id) return;
+  if (!cardEl?.dataset.id) {
+    e.preventDefault();
+    showAddMenu(view, e.clientX, e.clientY);
+    return;
+  }
   e.preventDefault();
   const it = view.item(cardEl.dataset.id);
   if (!it) return;
@@ -22,6 +27,18 @@ export function onContextMenu(view: BoardView, e: MouseEvent) {
     view.refreshSelectionClasses();
   }
   showCardMenu(view, it, e.clientX, e.clientY);
+}
+
+/** empty-canvas right-click: the toolbar's card tools, created at the click point */
+function showAddMenu(view: BoardView, x: number, y: number) {
+  const w = view.screenToWorld(x, y);
+  const menu = new Menu();
+  const add = (t: CardTool) =>
+    menu.addItem((i) => i.setTitle(t.label).setIcon(t.icon).onClick(() => view.createFromTool(t.key, w.x, w.y)));
+  CARD_TOOLS.forEach(add);
+  menu.addSeparator();
+  MEDIA_TOOLS.forEach(add);
+  menu.showAtPosition({ x, y });
 }
 
 export function showCardMenu(view: BoardView, it: Item, x: number, y: number) {

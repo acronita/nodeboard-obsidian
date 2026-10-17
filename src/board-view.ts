@@ -59,6 +59,8 @@ import {
   promptBoard as promptBoardImpl,
   addVaultFile as addVaultFileImpl,
   addVaultFileAt as addVaultFileAtImpl,
+  CARD_TOOLS,
+  MEDIA_TOOLS,
 } from "./board-item-crud";
 import {
   copySelection as copySelectionImpl,
@@ -402,19 +404,10 @@ export class BoardView extends TextFileView {
       return b;
     };
     // group 1 — draggables (drag onto the board to create)
-    tool("sticky-note", "Note", { drag: "note" });
-    tool("list-todo", "To-do list", { drag: "todo" });
-    tool("spline", "Line", { drag: "line" });
-    tool("columns-3", "Column", { drag: "column" });
-    tool("layout-dashboard", "Nested board", { drag: "board" });
-    tool("palette", "Color swatch", { drag: "swatch" });
-    tool("pen-tool", "Sketch card", { drag: "sketch" });
-    tool("mic", "Record", { drag: "record" });
+    for (const t of CARD_TOOLS) tool(t.icon, t.label, { drag: t.key });
     tb.createDiv({ cls: "mgn-tool-sep" });
     // group 2 — flexible tools
-    tool("image", "Media", { drag: "image" });
-    tool("file", "Vault file", { drag: "file" });
-    tool("link", "Link", { drag: "link" });
+    for (const t of MEDIA_TOOLS) tool(t.icon, t.label, { drag: t.key });
     tool("pencil", "Draw on the board (D)", { click: () => this.enterDrawMode() });
     // group 3 — controls
     tb.createDiv({ cls: "mgn-tool-sep" });
