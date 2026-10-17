@@ -11,7 +11,7 @@ A Milanote-style visual workspace for [Obsidian](https://obsidian.md): notes, im
 ## Features
 
 **Boards**
-- Infinite canvas, nested boards with breadcrumb, board-to-board shortcuts
+- Infinite canvas, nested boards with breadcrumb, board-to-board shortcuts; right-click a nested board card → "Rename board"
 - Broken-link detection, card previews, item locking, move/duplicate across boards
 - Built-in and custom templates
 
@@ -42,7 +42,7 @@ A Milanote-style visual workspace for [Obsidian](https://obsidian.md): notes, im
 
 **Canvas**
 - Select/drag, multi-select, group move, resize
-- Alt+drag duplicate, snap-to-grid, undo/redo, cut/copy/paste
+- Alt+drag duplicate, snap-to-grid, undo/redo, cut/copy/paste (Ctrl+V with an image on the clipboard, e.g. a screenshot, creates an image card)
 - Zoom controls (wheel on desktop; pinch and two-finger pan on touch devices)
 
 **Settings**

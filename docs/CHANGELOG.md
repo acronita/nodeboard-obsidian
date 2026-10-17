@@ -6,6 +6,10 @@ Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
 ## 2026-10-17 (1.2.0)
 
+- **Ctrl+V with an image on the clipboard creates an image card.** A screenshot or a copied image is saved to the assets folder as `Pasted image <timestamp>.<ext>` and placed at the center of the view. The board now listens for `paste` on the document (with no editable element focused the browser may fire it on `<body>`, missing the viewport), reads clipboard items as well as `files`, and the paste shortcut's internal card paste is deferred one tick so the image cancels it instead of both being pasted. Copying cards on the board now also writes their text to the system clipboard, so an image copied earlier can't win over freshly copied cards. Files: `src/board-drop-import.ts`, `src/board-keyboard.ts`, `src/board-clipboard.ts`, `src/board-view.ts`, `README.md`.
+
+- **Nested board cards can be renamed from their right-click menu ("Rename board").** Same flow as double-clicking the breadcrumb: `MaguilanotePlugin.renameBoard` now takes the board file instead of the open view, and the board is saved first so the rename listener finds the card on disk. Files: `src/board-context-menu.ts`, `src/main.ts`, `src/board-view.ts`, `README.md`, `docs/ARCHITECTURE.md`.
+
 - **Right-click on empty canvas lists the card tools.** Same tools as the left toolbar (note, to-do, line, column, nested board, swatch, sketch, record, media, vault file, link); the picked one is created at the click point, so dragging from the toolbar is optional. The toolbar and the menu now share one tool list (`CARD_TOOLS`/`MEDIA_TOOLS`). Files: `src/board-context-menu.ts`, `src/board-item-crud.ts`, `src/board-view.ts`, `README.md`.
 
 - **Columns can take a card color and an accent color.** The contextual toolbar's color and accent controls now show for columns too. An uncolored column keeps its themed panel look; a colored one uses the card color as its background, with title/count text switched to that color's legible text color. Files: `src/card-toolbar.ts`, `src/render.ts`, `README.md`.
