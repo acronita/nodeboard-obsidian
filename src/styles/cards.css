@@ -53,6 +53,11 @@
 .mgn-root .mgn-card:not(.mgn-selected) :is(.mgn-todo-check, .mgn-todo-grip, .mgn-record-player, .mgn-record-play, .mgn-record-bar, .mgn-video-bar, .mgn-video-play, .mgn-video-progress) {
   pointer-events: auto;
 }
+/* a selected card inside an UNselected column: the inert rule above also matches
+   through the column (an ancestor .mgn-card), so re-enable the child's inputs */
+.mgn-root .mgn-col-body .mgn-card.mgn-selected :is(input, textarea, audio, video, iframe, a, button, .mgn-swatch-input) {
+  pointer-events: auto;
+}
 
 /* broken references */
 .mgn-card.mgn-missing {
