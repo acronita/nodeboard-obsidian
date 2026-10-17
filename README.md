@@ -33,11 +33,12 @@ A Milanote-style visual workspace for [Obsidian](https://obsidian.md): notes, im
 
 **Text editing**
 - Full Markdown: headings, bold/italic/strikethrough, lists, quotes, code, links, `[[wikilinks]]`
-- Card background colors, plus an independent accent color (left-side stripe)
+- Card background colors, plus an independent accent color (left-side stripe) — columns included
 
 **Contextual toolbar**
 - Selecting a card opens its options in the same lateral slot used by the Draw toolbar: card color, accent color, show/hide title, and type-specific actions (replace reference, transcribe recording)
 - Right-click keeps only structural actions: lock/unlock, duplicate, bring to front/back, delete
+- Right-click on empty canvas lists the card tools (same as the left toolbar) and creates the picked one at the click point
 
 **Canvas**
 - Select/drag, multi-select, group move, resize
