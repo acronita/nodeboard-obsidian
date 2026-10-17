@@ -64,6 +64,14 @@ export function showCardMenu(view: BoardView, it: Item, x: number, y: number) {
     view.board.items.unshift(moved);
     view.commit();
   }));
+  const boardFile = it.type === "board" ? view.resolveFile(it.path) : null;
+  if (boardFile) {
+    menu.addItem((i) => i.setTitle("Rename board").setIcon("pencil").onClick(() => {
+      // flush pending edits first: the rename listener finds this card by
+      // reading the board file from disk
+      void view.save().then(() => view.plugin.renameBoard(boardFile));
+    }));
+  }
   menu.addSeparator();
   menu.addItem((i) => i.setTitle("Delete").setIcon("trash").onClick(() => view.deleteSelection()));
   menu.showAtPosition({ x, y });
