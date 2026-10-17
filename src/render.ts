@@ -297,6 +297,17 @@ function applyTodoDrop(view: BoardView, source: Item, entry: TodoEntry, target: 
   view.commit();
 }
 
+/** size a to-do item's textarea to its wrapped text. Runs again on the next
+ * frame because a freshly rendered card isn't in the DOM yet (no layout). */
+function fitTodoText(txt: HTMLTextAreaElement) {
+  const fit = () => {
+    txt.setCssStyles({ height: "auto" });
+    txt.setCssStyles({ height: `${txt.scrollHeight}px` });
+  };
+  fit();
+  window.requestAnimationFrame(fit);
+}
+
 /** optional centered title shown above a card's content when `it.showTitle` is on
  * (toggled via the card's right-click menu) — styled exactly like a column's
  * title. An untouched title defaults to the card's own name, e.g. "Note", as
@@ -358,7 +369,7 @@ export function renderCardFn(view: BoardView, it: Item, inColumn = false): HTMLE
       const list = el.createDiv({ cls: "mgn-todo-list" });
       const focusTodoText = (idx: number, caretEnd = false) => {
         window.setTimeout(() => {
-          const fresh = view.worldEl.querySelectorAll<HTMLInputElement>(
+          const fresh = view.worldEl.querySelectorAll<HTMLTextAreaElement>(
             `.mgn-card[data-id="${it.id}"] .mgn-todo-text`
           )[idx];
           if (!fresh) return;
@@ -370,12 +381,13 @@ export function renderCardFn(view: BoardView, it: Item, inColumn = false): HTMLE
         const row = list.createDiv({ cls: "mgn-todo-row" });
         const cb = row.createEl("input", { type: "checkbox", cls: "mgn-todo-check" });
         cb.checked = t.done;
-        const txt = row.createEl("input", {
-          type: "text",
+        // a textarea (not an input) so long items wrap and the row grows downward
+        const txt = row.createEl("textarea", {
           cls: "mgn-todo-text" + (t.done ? " mgn-done" : ""),
-          value: t.text,
-          attr: { placeholder: "Add item" },
+          attr: { placeholder: "Add item", rows: "1" },
         });
+        txt.value = t.text;
+        fitTodoText(txt);
         // toggle in place (no rerender) so the checkbox's check-in animation plays
         cb.addEventListener("change", () => {
           t.done = cb.checked;
@@ -386,6 +398,7 @@ export function renderCardFn(view: BoardView, it: Item, inColumn = false): HTMLE
         // (persist without a history snapshot); one undo step per edit on blur
         txt.addEventListener("input", () => {
           t.text = txt.value;
+          fitTodoText(txt);
           view.requestSave();
         });
         txt.addEventListener("change", () => view.commit(false));
