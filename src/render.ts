@@ -343,7 +343,13 @@ export function renderCardFn(view: BoardView, it: Item, inColumn = false): HTMLE
     el.style.background = c.bg;
     el.style.color = c.fg;
   }
-  if (it.accentColor && it.accentColor !== "default" && it.type !== "column" && it.type !== "swatch") {
+  // an uncolored column keeps its themed panel look; a colored one takes the
+  // card color, with its title/count text following the color's legible fg
+  if (it.type === "column" && it.color && c.key !== "default") {
+    el.style.background = c.bg;
+    el.style.setProperty("--mgn-column-text", c.fg);
+  }
+  if (it.accentColor && it.accentColor !== "default" && it.type !== "swatch") {
     el.style.borderLeft = `4px solid ${colorOf(it.accentColor).bg}`;
   }
   if (view.selection.has(it.id)) el.addClass("mgn-selected");
