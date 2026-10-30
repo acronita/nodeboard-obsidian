@@ -110,6 +110,27 @@ export function renderSettingsUI(containerEl: HTMLElement, plugin: MaguilanotePl
       })
     );
 
+  new Setting(containerEl)
+    .setName("Hide nested boards in the file explorer")
+    .setDesc("Boards that another board in the same folder contains as a card don't show up in the file explorer. Boards you create in the file explorer stay visible until you add them to a board.")
+    .addToggle((t) =>
+      t.setValue(s.hideNestedBoards).onChange(async (v) => {
+        s.hideNestedBoards = v;
+        await save();
+        plugin.nestedBoards.render();
+      })
+    );
+
+  new Setting(containerEl)
+    .setName("Move deleted nested boards to trash")
+    .setDesc("When you delete a nested board's card and no board points to the file any more, the file goes to the trash 5 seconds later, following Obsidian's setting for deleted files. Cut and paste or undo within that time keeps it.")
+    .addToggle((t) =>
+      t.setValue(s.trashRemovedNestedBoards).onChange(async (v) => {
+        s.trashRemovedNestedBoards = v;
+        await save();
+      })
+    );
+
   containerEl.createEl("h3", { text: "Recording" });
 
   new Setting(containerEl)

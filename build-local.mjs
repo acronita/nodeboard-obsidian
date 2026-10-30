@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 // earlier chunk once everything is flattened into one scope
 const files = [
   "src/types.ts",
+  "src/nested-board-refs.ts",
   "src/secrets.ts",
   "src/settings-ui.ts",
   "src/draw.ts",
@@ -27,6 +28,7 @@ const files = [
   "src/file-preview.ts",
   "src/board-search.ts",
   "src/board-view.ts",
+  "src/nested-boards.ts",
   "src/main.ts",
 ];
 const obsidianImports = new Set();
