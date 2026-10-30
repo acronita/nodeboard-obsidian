@@ -48,6 +48,7 @@ A Milanote-style visual workspace for [Obsidian](https://obsidian.md): notes, im
 - Gear icon next to the breadcrumb trail opens the Settings panel
 - Customization: separate body/heading fonts (pick a preset or any Google Font by name), dark/light theme, and per-theme colors (board background, default card background, each card color preset)
 - Shortcuts: rebind any keyboard shortcut (click to record, reset to default), plus a collapsible mouse/gesture reference
+- Nested boards (both off by default): hide boards that another board in the same folder contains from the file explorer, and move a nested board to the trash once its card is deleted and no board points to it any more
 
 **Search & export**
 - In-board search, export to Markdown or JSON Canvas, import JSON Canvas and OS/vault files

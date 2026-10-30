@@ -16,6 +16,7 @@ import { loadOpenAiApiKey } from "./secrets";
 import { removeGoogleFonts } from "./fonts";
 import { ImportTemplateConfirmModal, TextPromptModal } from "./modals";
 import { TemplateBundle, collectBundle, unbundleTemplate } from "./template-bundle";
+import { NestedBoards } from "./nested-boards";
 import {
   BoardData,
   DEFAULT_BOARD,
@@ -52,6 +53,10 @@ export interface MaguilanoteSettings {
    * (see src/secrets.ts) so it isn't swept into vault backups; this field
    * exists because mobile has no filesystem access outside the vault. */
   openaiApiKey: string;
+  /** hide boards nested in another board of the same folder in the file explorer */
+  hideNestedBoards: boolean;
+  /** move a nested board to the trash once no board points to it any more */
+  trashRemovedNestedBoards: boolean;
 }
 
 const DEFAULT_SETTINGS: MaguilanoteSettings = {
@@ -67,6 +72,8 @@ const DEFAULT_SETTINGS: MaguilanoteSettings = {
   colors: { light: { ...DEFAULT_THEME_COLORS.light }, dark: { ...DEFAULT_THEME_COLORS.dark } },
   defaultMicId: "",
   openaiApiKey: "",
+  hideNestedBoards: false,
+  trashRemovedNestedBoards: false,
 };
 
 /** A JSON Canvas node/edge as read from disk: every field is untrusted until checked. */
@@ -82,6 +89,7 @@ export default class MaguilanotePlugin extends Plugin {
   settings: MaguilanoteSettings = DEFAULT_SETTINGS;
   /** internal clipboard shared across boards */
   clipboard: { items: Item[]; edges: BoardData["edges"] } | null = null;
+  nestedBoards = new NestedBoards(this);
 
   /** desktop: key lives outside the vault (src/secrets.ts); mobile: settings fallback */
   async getOpenAiApiKey(): Promise<string> {
@@ -92,6 +100,7 @@ export default class MaguilanotePlugin extends Plugin {
     await this.loadSettings();
 
     this.registerView(VIEW_TYPE_BOARD, (leaf) => new BoardView(leaf, this));
+    this.nestedBoards.start();
     this.registerExtensions(["board"], VIEW_TYPE_BOARD);
 
     this.addRibbonIcon("layout-dashboard", "Maguilanote: new board", () =>

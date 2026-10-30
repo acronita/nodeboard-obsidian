@@ -4,6 +4,10 @@ Living log of significant changes to the project. This is **not** optional bookk
 
 Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
+## 2026-10-30 (1.2.0)
+
+- **New settings for nested boards, both off by default.** "Hide nested boards in the file explorer" hides every board that another board in the same folder contains as a card — including ones just created with "New board", which are hidden before their card is saved, so they don't flash in the explorer. Boards created in the file explorer stay visible until added to a board; boards only linked from another folder stay visible. "Move deleted nested boards to trash" moves a nested board to the trash (via `FileManager.trashFile`, following the user's deleted-files preference) 5 seconds after its card disappears, unless a board points to it again by then (cut and paste, undo). Before, deleting a board card left an orphaned `.board` file behind. Files: `src/nested-boards.ts`, `src/nested-board-refs.ts`, `src/main.ts`, `src/settings-ui.ts`, `src/board-item-crud.ts`, `test/nested-board-refs.test.ts`, `build-local.mjs`, `README.md`, `docs/ARCHITECTURE.md`, `manifest.json`, `package.json`, `package-lock.json`, `versions.json`.
+
 ## 2026-10-12 (1.1.0)
 
 - **The card toolbar now shows "Transcribe text" right after a recording finishes.** The toolbar was only rebuilt on selection changes, so a freshly recorded card kept its pre-recording toolbar until it was deselected and selected again. Saving a recording now re-syncs the toolbar. Files: `src/record-card.ts`.

@@ -124,6 +124,7 @@ export function promptBoard(view: BoardView, pos?: { x: number; y: number }) {
     while (view.app.vault.getAbstractFileByPath(path)) {
       path = normalizePath(`${prefix}${name} ${i++}.board`);
     }
+    view.plugin.nestedBoards.expectNested(path);
     await view.app.vault.create(path, JSON.stringify({ version: 1, items: [], edges: [] }, null, 2));
     view.addItem({ type: "board", path, title: name, w: 220 }, pos?.x, pos?.y);
   }).open();
