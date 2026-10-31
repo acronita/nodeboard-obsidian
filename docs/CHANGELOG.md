@@ -4,7 +4,7 @@ Living log of significant changes to the project. This is **not** optional bookk
 
 Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
-## 2026-10-31 (unreleased fix, pending runtime test)
+## 2026-10-31 (1.2.1)
 
 - **Nested-board breadcrumb trail survives an Obsidian restart.** Closing Obsidian while inside a nested board reopened it with no trail, as if it were a top-level board. `BoardView` now stores the trail in the leaf's view state (`getState`/`setState`), which Obsidian persists in `workspace.json` and also replays on back/forward navigation. Trail entries whose board was deleted are dropped on restore. Files touched: `src/board-view.ts`, `docs/CHANGELOG.md`.
 
