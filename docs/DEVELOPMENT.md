@@ -49,7 +49,7 @@ Both paths produce `main.js` at the project root. This is a fallback path, not t
 
 ## Load the plugin in Obsidian
 
-Copy `main.js`, `manifest.json` and `styles.css` into `YOUR_VAULT/.obsidian/plugins/maguilanote/`, then enable **Maguilanote** under Settings → Community plugins. Reload the plugin (or restart Obsidian) after each rebuild. (Set up `.env.local` as described above to have `npm run build` do this copy automatically.)
+Copy `main.js`, `manifest.json` and `styles.css` into `YOUR_VAULT/.obsidian/plugins/maguilanote/`, then enable **Nodeboard** under Settings → Community plugins. Reload the plugin (or restart Obsidian) after each rebuild. (Set up `.env.local` as described above to have `npm run build` do this copy automatically.)
 
 ## Verifying a change
 

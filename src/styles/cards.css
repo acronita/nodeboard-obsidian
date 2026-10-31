@@ -53,6 +53,11 @@
 .mgn-root .mgn-card:not(.mgn-selected) :is(.mgn-todo-check, .mgn-todo-grip, .mgn-record-player, .mgn-record-play, .mgn-record-bar, .mgn-video-bar, .mgn-video-play, .mgn-video-progress) {
   pointer-events: auto;
 }
+/* a selected card inside an UNselected column: the inert rule above also matches
+   through the column (an ancestor .mgn-card), so re-enable the child's inputs */
+.mgn-root .mgn-col-body .mgn-card.mgn-selected :is(input, textarea, audio, video, iframe, a, button, .mgn-swatch-input) {
+  pointer-events: auto;
+}
 
 /* broken references */
 .mgn-card.mgn-missing {
@@ -515,7 +520,7 @@
 }
 .mgn-todo-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* checkbox/grip stay on the first line of a wrapped item */
   gap: 3px;
   padding: 0 4px; /* small horizontal breathing room; no vertical padding bloating the card */
 }
@@ -527,7 +532,7 @@
   position: relative;
   width: 16px;
   height: 16px;
-  margin: 0;
+  margin: 2px 0 0; /* centers on the first text line (13px * 1.45) */
   padding: 0;
   border-radius: 5px;
   color: inherit; /* form controls don't inherit `color` by default,
@@ -562,15 +567,24 @@
   opacity: 1;
   transform: scale(1);
 }
-.mgn-todo-text {
+/* .mgn-root-prefixed to outrank Obsidian's textarea:hover/:focus theme rules */
+.mgn-root .mgn-todo-text {
   flex: 1;
   min-width: 0;
   border: none;
   background: transparent;
   color: inherit;
   font-size: 13px;
+  font-family: inherit;
+  line-height: 1.45;
   outline: none;
   padding: 0; /* remove the input's default padding so the text hugs the checkbox */
+  margin: 0;
+  resize: none; /* height follows the wrapped text (fitTodoText) */
+  overflow: hidden;
+  min-height: 0;
+  box-shadow: none;
+  border-radius: 0;
   transition: opacity 0.2s ease;
 }
 .mgn-todo-text.mgn-done {
@@ -579,6 +593,7 @@
 }
 /* drag-handle: hidden until the row is hovered; drag to reorder or move out */
 .mgn-todo-grip {
+  height: 19px; /* one text line, so the grip lines up with the first line */
   opacity: 0;
   cursor: move;
   display: flex;

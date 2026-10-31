@@ -28,7 +28,16 @@ export function onKeyDown(view: BoardView, e: KeyboardEvent) {
   if (matchesBinding(e, kb.duplicate)) { e.preventDefault(); view.duplicateSelection(); return; }
   if (matchesBinding(e, kb.copy)) { e.preventDefault(); view.copySelection(false); return; }
   if (matchesBinding(e, kb.cut)) { e.preventDefault(); view.copySelection(true); return; }
-  if (matchesBinding(e, kb.paste)) { view.pasteInternal(); return; }
+  if (matchesBinding(e, kb.paste)) {
+    // deferred: the native paste event (fired right after this keydown) cancels
+    // it when the system clipboard holds an image, so only the image is pasted
+    if (view.pendingInternalPaste !== null) window.clearTimeout(view.pendingInternalPaste);
+    view.pendingInternalPaste = window.setTimeout(() => {
+      view.pendingInternalPaste = null;
+      view.pasteInternal();
+    }, 0);
+    return;
+  }
   if (matchesBinding(e, kb.selectAll)) { e.preventDefault(); view.selection = new Set(view.board.items.filter((i) => !i.parent).map((i) => i.id)); view.refreshSelectionClasses(); return; }
   if (matchesBinding(e, kb.search)) { e.preventDefault(); view.openSearch(); return; }
   if (matchesBinding(e, kb.drawMode)) { view.enterDrawMode(); return; }

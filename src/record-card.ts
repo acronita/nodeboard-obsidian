@@ -13,7 +13,7 @@ export function closeRecordPopups(view: BoardView) {
 
 /** save a binary blob into the configured assets folder, returning the created file */
 async function saveAssetBinary(view: BoardView, filename: string, buf: ArrayBuffer): Promise<TFile> {
-  const base = normalizePath(view.plugin.settings.assetsFolder?.trim() || "Maguilanote Assets");
+  const base = normalizePath(view.plugin.settings.assetsFolder?.trim() || "Nodeboard Assets");
   if (!view.app.vault.getAbstractFileByPath(base)) {
     await view.app.vault.createFolder(base).catch(() => {});
   }

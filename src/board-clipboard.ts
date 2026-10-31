@@ -14,6 +14,13 @@ export function copySelection(view: BoardView, cut: boolean) {
     .filter((e) => !!e.from && !!e.to && ids.has(e.from) && ids.has(e.to))
     .map((e) => structuredClone(e));
   view.plugin.clipboard = { items, edges };
+  // also replace the system clipboard, so an image copied earlier can't win over
+  // these cards on the next paste (an image on the clipboard is pasted as a card)
+  const text = items
+    .flatMap((i) => [i.title, i.text, i.url, ...(i.todos ?? []).map((t) => t.text)])
+    .filter((t): t is string => !!t?.trim())
+    .join("\n\n");
+  void navigator.clipboard?.writeText(text).catch(() => {});
   if (cut) {
     view.board.items = view.board.items.filter((i) => !ids.has(i.id));
     view.board.edges = view.board.edges.filter((e) => !(e.from && ids.has(e.from)) && !(e.to && ids.has(e.to)));

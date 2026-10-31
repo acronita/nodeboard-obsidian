@@ -28,7 +28,7 @@ import {
   ThemeColors,
 } from "./types";
 
-export interface MaguilanoteSettings {
+export interface NodeboardSettings {
   gridSnap: boolean;
   gridSize: number;
   defaultNoteWidth: number;
@@ -54,12 +54,12 @@ export interface MaguilanoteSettings {
   openaiApiKey: string;
 }
 
-const DEFAULT_SETTINGS: MaguilanoteSettings = {
+const DEFAULT_SETTINGS: NodeboardSettings = {
   gridSnap: false,
   gridSize: 24,
   defaultNoteWidth: 260,
-  templatesFolder: "Maguilanote Templates",
-  assetsFolder: "Maguilanote Assets",
+  templatesFolder: "Nodeboard Templates",
+  assetsFolder: "Nodeboard Assets",
   fontFamily: "",
   headingFontFamily: "",
   theme: "dark",
@@ -78,8 +78,8 @@ interface CanvasEdge { fromNode?: unknown; toNode?: unknown; label?: unknown }
 
 const isFiniteNumber = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 
-export default class MaguilanotePlugin extends Plugin {
-  settings: MaguilanoteSettings = DEFAULT_SETTINGS;
+export default class NodeboardPlugin extends Plugin {
+  settings: NodeboardSettings = DEFAULT_SETTINGS;
   /** internal clipboard shared across boards */
   clipboard: { items: Item[]; edges: BoardData["edges"] } | null = null;
 
@@ -94,7 +94,7 @@ export default class MaguilanotePlugin extends Plugin {
     this.registerView(VIEW_TYPE_BOARD, (leaf) => new BoardView(leaf, this));
     this.registerExtensions(["board"], VIEW_TYPE_BOARD);
 
-    this.addRibbonIcon("layout-dashboard", "Maguilanote: new board", () =>
+    this.addRibbonIcon("layout-dashboard", "Nodeboard: new board", () =>
       this.createBoard()
     );
 
@@ -167,7 +167,7 @@ export default class MaguilanotePlugin extends Plugin {
       },
     });
 
-    this.addSettingTab(new MaguilanoteSettingTab(this.app, this));
+    this.addSettingTab(new NodeboardSettingTab(this.app, this));
 
     // "New board" in the folder context menu
     this.registerEvent(
@@ -175,7 +175,7 @@ export default class MaguilanotePlugin extends Plugin {
         if (file instanceof TFolder) {
           menu.addItem((mi) =>
             mi
-              .setTitle("New Maguilanote board")
+              .setTitle("New Nodeboard board")
               .setIcon("layout-dashboard")
               .onClick(() => this.createBoard(file.path))
           );
@@ -216,13 +216,12 @@ export default class MaguilanotePlugin extends Plugin {
     return file;
   }
 
-  /** Rename the current board in place (same folder). `fileManager.renameFile`
-   * updates every markdown link to the board; references stored inside other
-   * .board files and open breadcrumb trails are fixed by the vault "rename"
-   * listener (repairBoardRefs), since Obsidian can't see those JSON paths. */
-  renameBoard(view: BoardView) {
-    const file = view.file;
-    if (!file) return;
+  /** Rename a board file in place (same folder): the open board from its
+   * breadcrumb, or a nested board from its card's right-click menu.
+   * `fileManager.renameFile` updates every markdown link to the board; references
+   * stored inside other .board files and open breadcrumb trails are fixed by the
+   * vault "rename" listener (repairBoardRefs), since Obsidian can't see those JSON paths. */
+  renameBoard(file: TFile) {
     new TextPromptModal(this.app, "Rename board", file.basename, async (name) => {
       if (!name || name === file.basename) return;
       const prefix = file.parent && file.parent.path !== "/" ? file.parent.path + "/" : "";
@@ -366,7 +365,7 @@ export default class MaguilanotePlugin extends Plugin {
       bundle = JSON.parse(raw) as TemplateBundle;
       if (bundle.format !== "maguilanote-template") throw new Error("not a template");
     } catch {
-      new Notice("Not a valid Maguilanote template file");
+      new Notice("Not a valid Nodeboard template file");
       return;
     }
     new ImportTemplateConfirmModal(this.app, displayName, async () => {
@@ -380,7 +379,7 @@ export default class MaguilanotePlugin extends Plugin {
         }
         new Notice(`Imported template "${displayName}"`);
       } catch (e) {
-        console.error("Maguilanote: template import failed", e);
+        console.error("Nodeboard: template import failed", e);
         new Notice(`Failed to import template: ${e instanceof Error ? e.message : e}`);
       }
     }).open();
@@ -564,7 +563,7 @@ export default class MaguilanotePlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<MaguilanoteSettings> | null);
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<NodeboardSettings> | null);
     this.settings.keybindings = Object.assign(
       {},
       DEFAULT_KEYBINDINGS,
@@ -598,7 +597,7 @@ export default class MaguilanotePlugin extends Plugin {
 }
 
 class JsonCanvasPicker extends FuzzySuggestModal<TFile> {
-  constructor(app: App, private plugin: MaguilanotePlugin) { super(app); this.setPlaceholder("Choose a .canvas file..."); }
+  constructor(app: App, private plugin: NodeboardPlugin) { super(app); this.setPlaceholder("Choose a .canvas file..."); }
   getItems() { return this.app.vault.getFiles().filter((f) => f.extension.toLowerCase() === "canvas"); }
   getItemText(f: TFile) { return f.path; }
   onChooseItem(f: TFile) {
@@ -608,7 +607,7 @@ class JsonCanvasPicker extends FuzzySuggestModal<TFile> {
 }
 
 class TemplatePicker extends FuzzySuggestModal<TFile> {
-  constructor(app: App, private plugin: MaguilanotePlugin) {
+  constructor(app: App, private plugin: NodeboardPlugin) {
     super(app);
     this.setPlaceholder("Choose a template...");
   }
@@ -639,8 +638,8 @@ class TemplatePicker extends FuzzySuggestModal<TFile> {
   }
 }
 
-class MaguilanoteSettingTab extends PluginSettingTab {
-  constructor(app: App, private plugin: MaguilanotePlugin) {
+class NodeboardSettingTab extends PluginSettingTab {
+  constructor(app: App, private plugin: NodeboardPlugin) {
     super(app, plugin);
   }
   display() {

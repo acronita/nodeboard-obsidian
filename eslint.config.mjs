@@ -22,7 +22,7 @@ export default defineConfig([
       "obsidianmd/ui/sentence-case": [
         "warn",
         {
-          brands: ["Obsidian", "Markdown", "Maguilanote", "JSON Canvas", "Google Font", "Google Fonts", "Inter", "OpenAI", "Record"],
+          brands: ["Obsidian", "Markdown", "Nodeboard", "JSON Canvas", "Google Font", "Google Fonts", "Inter", "OpenAI", "Record"],
           ignoreWords: ["Ctrl", "Settings", "Recording"],
           ignoreRegex: ["^sk-", "^or a Google Font name$"],
         },
