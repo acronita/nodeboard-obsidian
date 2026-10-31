@@ -59,6 +59,25 @@ export function addRecord(view: BoardView, x?: number, y?: number) {
   view.addItem({ type: "record", w: 220 }, x, y);
 }
 
+/** card-creating tools, shared by the left toolbar and the empty-canvas right-click
+ * menu. `key` is what `createFromTool` dispatches on. */
+export interface CardTool { icon: string; label: string; key: string; }
+export const CARD_TOOLS: CardTool[] = [
+  { icon: "sticky-note", label: "Note", key: "note" },
+  { icon: "list-todo", label: "To-do list", key: "todo" },
+  { icon: "spline", label: "Line", key: "line" },
+  { icon: "columns-3", label: "Column", key: "column" },
+  { icon: "layout-dashboard", label: "Nested board", key: "board" },
+  { icon: "palette", label: "Color swatch", key: "swatch" },
+  { icon: "pen-tool", label: "Sketch card", key: "sketch" },
+  { icon: "mic", label: "Record", key: "record" },
+];
+export const MEDIA_TOOLS: CardTool[] = [
+  { icon: "image", label: "Media", key: "image" },
+  { icon: "file", label: "Vault file", key: "file" },
+  { icon: "link", label: "Link", key: "link" },
+];
+
 export function createFromTool(view: BoardView, key: string, x: number, y: number) {
   switch (key) {
     case "note": view.addNote(x, y, true); break;

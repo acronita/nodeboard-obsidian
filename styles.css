@@ -178,6 +178,9 @@
 .mgn-root .mgn-card:not(.mgn-selected) :is(.mgn-todo-check, .mgn-todo-grip, .mgn-record-player, .mgn-record-play, .mgn-record-bar, .mgn-video-bar, .mgn-video-play, .mgn-video-progress) {
   pointer-events: auto;
 }
+.mgn-root .mgn-col-body .mgn-card.mgn-selected :is(input, textarea, audio, video, iframe, a, button, .mgn-swatch-input) {
+  pointer-events: auto;
+}
 .mgn-card.mgn-missing {
   outline: 2px dashed var(--mgn-danger);
   outline-offset: 1px;
@@ -614,7 +617,7 @@
 }
 .mgn-todo-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 3px;
   padding: 0 4px;
 }
@@ -624,7 +627,7 @@
   position: relative;
   width: 16px;
   height: 16px;
-  margin: 0;
+  margin: 2px 0 0;
   padding: 0;
   border-radius: 5px;
   color: inherit;
@@ -661,15 +664,23 @@
   opacity: 1;
   transform: scale(1);
 }
-.mgn-todo-text {
+.mgn-root .mgn-todo-text {
   flex: 1;
   min-width: 0;
   border: none;
   background: transparent;
   color: inherit;
   font-size: 13px;
+  font-family: inherit;
+  line-height: 1.45;
   outline: none;
   padding: 0;
+  margin: 0;
+  resize: none;
+  overflow: hidden;
+  min-height: 0;
+  box-shadow: none;
+  border-radius: 0;
   transition: opacity 0.2s ease;
 }
 .mgn-todo-text.mgn-done {
@@ -677,6 +688,7 @@
   opacity: 0.5;
 }
 .mgn-todo-grip {
+  height: 19px;
   opacity: 0;
   cursor: move;
   display: flex;

@@ -59,6 +59,8 @@ import {
   promptBoard as promptBoardImpl,
   addVaultFile as addVaultFileImpl,
   addVaultFileAt as addVaultFileAtImpl,
+  CARD_TOOLS,
+  MEDIA_TOOLS,
 } from "./board-item-crud";
 import {
   copySelection as copySelectionImpl,
@@ -158,6 +160,9 @@ export class BoardView extends TextFileView {
   crumbs: { path: string; name: string }[] = [];
   pendingNav: string | null = null;
   pendingPos: { x: number; y: number } | null = null;
+  /** internal paste queued by the paste shortcut; the native `paste` event that
+   * follows cancels it when the system clipboard holds an image */
+  pendingInternalPaste: number | null = null;
 
   // manual double-click detection (pointer capture retargets native dblclick)
   lastClickAt = 0;
@@ -265,7 +270,7 @@ export class BoardView extends TextFileView {
         seg.setAttribute("title", "Double-click to rename");
         seg.addEventListener("dblclick", (e) => {
           e.preventDefault();
-          this.plugin.renameBoard(this);
+          if (this.file) this.plugin.renameBoard(this.file);
         });
       }
       if (!last) {
@@ -402,19 +407,10 @@ export class BoardView extends TextFileView {
       return b;
     };
     // group 1 — draggables (drag onto the board to create)
-    tool("sticky-note", "Note", { drag: "note" });
-    tool("list-todo", "To-do list", { drag: "todo" });
-    tool("spline", "Line", { drag: "line" });
-    tool("columns-3", "Column", { drag: "column" });
-    tool("layout-dashboard", "Nested board", { drag: "board" });
-    tool("palette", "Color swatch", { drag: "swatch" });
-    tool("pen-tool", "Sketch card", { drag: "sketch" });
-    tool("mic", "Record", { drag: "record" });
+    for (const t of CARD_TOOLS) tool(t.icon, t.label, { drag: t.key });
     tb.createDiv({ cls: "mgn-tool-sep" });
     // group 2 — flexible tools
-    tool("image", "Media", { drag: "image" });
-    tool("file", "Vault file", { drag: "file" });
-    tool("link", "Link", { drag: "link" });
+    for (const t of MEDIA_TOOLS) tool(t.icon, t.label, { drag: t.key });
     tool("pencil", "Draw on the board (D)", { click: () => this.enterDrawMode() });
     // group 3 — controls
     tb.createDiv({ cls: "mgn-tool-sep" });
@@ -590,7 +586,11 @@ export class BoardView extends TextFileView {
     });
     this.registerDomEvent(this.viewportEl, "dragover", (e) => e.preventDefault());
     this.registerDomEvent(this.viewportEl, "drop", (e) => this.onDrop(e));
-    this.registerDomEvent(this.viewportEl, "paste", (e) => this.onPaste(e));
+    // on the document, not the viewport: with no editable element focused the
+    // browser may fire `paste` on <body> instead of the focused viewport
+    this.registerDomEvent(this.containerEl.doc, "paste", (e) => {
+      if (this.app.workspace.getActiveViewOfType(BoardView) === this) void this.onPaste(e);
+    });
 
     this.applyTransform();
     this.resizeObserver = new ResizeObserver(() => {

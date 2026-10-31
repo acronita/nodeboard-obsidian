@@ -4,6 +4,22 @@ Living log of significant changes to the project. This is **not** optional bookk
 
 Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
+## 2026-10-17 (1.2.0)
+
+- **Ctrl+V with an image on the clipboard creates an image card.** A screenshot or a copied image is saved to the assets folder as `Pasted image <timestamp>.<ext>` and placed at the center of the view. The board now listens for `paste` on the document (with no editable element focused the browser may fire it on `<body>`, missing the viewport), reads clipboard items as well as `files`, and the paste shortcut's internal card paste is deferred one tick so the image cancels it instead of both being pasted. Copying cards on the board now also writes their text to the system clipboard, so an image copied earlier can't win over freshly copied cards. Files: `src/board-drop-import.ts`, `src/board-keyboard.ts`, `src/board-clipboard.ts`, `src/board-view.ts`, `README.md`.
+
+- **Nested board cards can be renamed from their right-click menu ("Rename board").** Same flow as double-clicking the breadcrumb: `MaguilanotePlugin.renameBoard` now takes the board file instead of the open view, and the board is saved first so the rename listener finds the card on disk. Files: `src/board-context-menu.ts`, `src/main.ts`, `src/board-view.ts`, `README.md`, `docs/ARCHITECTURE.md`.
+
+- **Right-click on empty canvas lists the card tools.** Same tools as the left toolbar (note, to-do, line, column, nested board, swatch, sketch, record, media, vault file, link); the picked one is created at the click point, so dragging from the toolbar is optional. The toolbar and the menu now share one tool list (`CARD_TOOLS`/`MEDIA_TOOLS`). Files: `src/board-context-menu.ts`, `src/board-item-crud.ts`, `src/board-view.ts`, `README.md`.
+
+- **Columns can take a card color and an accent color.** The contextual toolbar's color and accent controls now show for columns too. An uncolored column keeps its themed panel look; a colored one uses the card color as its background, with title/count text switched to that color's legible text color. Files: `src/card-toolbar.ts`, `src/render.ts`, `README.md`.
+
+- **Cards inside a column can be edited again.** The "unselected cards are inert" CSS rule also matched a selected card's inputs through its unselected parent column, so a to-do item, title or note editor inside a column often ignored clicks (the cursor stayed the column's grab cursor). Selected column children now re-enable their inputs. Files: `src/styles/cards.css`.
+
+- **To-do items wrap instead of scrolling sideways.** Each item is now an auto-growing textarea, so long items wrap and the card grows vertically; the checkbox and grip stay aligned with the first line. Files: `src/render.ts`, `src/styles/cards.css`.
+
+- **Dragging a card out of a column keeps it under the pointer.** The drag started from the child's stale stored position (column children are laid out by the column), so the card jumped toward the board origin — far away when the column was. The card also keeps its dragging look after leaving the column. Files: `src/board-interaction.ts`.
+
 ## 2026-10-12 (1.1.0)
 
 - **The card toolbar now shows "Transcribe text" right after a recording finishes.** The toolbar was only rebuilt on selection changes, so a freshly recorded card kept its pre-recording toolbar until it was deselected and selected again. Saving a recording now re-syncs the toolbar. Files: `src/record-card.ts`.

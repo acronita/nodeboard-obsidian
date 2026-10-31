@@ -484,11 +484,16 @@ export function processPointerMove(view: BoardView, e: PointerEvent) {
             it.order = undefined;
             it.x = w.x - it.w / 2;
             it.y = w.y - 16;
+            // a column child's stored x/y is stale (it's laid out by the column),
+            // so the drag must start from the new position, not the old one
+            d.orig.set(it.id, { x: it.x, y: it.y });
             d.startWX = w.x;
             d.startWY = w.y;
             dx = 0;
             dy = 0;
             view.render();
+            // render() rebuilt the card, dropping the class added above
+            view.worldEl.querySelector(`.mgn-card[data-id="${it.id}"]`)?.classList.add("mgn-dragging");
           }
         }
       }

@@ -216,13 +216,12 @@ export default class MaguilanotePlugin extends Plugin {
     return file;
   }
 
-  /** Rename the current board in place (same folder). `fileManager.renameFile`
-   * updates every markdown link to the board; references stored inside other
-   * .board files and open breadcrumb trails are fixed by the vault "rename"
-   * listener (repairBoardRefs), since Obsidian can't see those JSON paths. */
-  renameBoard(view: BoardView) {
-    const file = view.file;
-    if (!file) return;
+  /** Rename a board file in place (same folder): the open board from its
+   * breadcrumb, or a nested board from its card's right-click menu.
+   * `fileManager.renameFile` updates every markdown link to the board; references
+   * stored inside other .board files and open breadcrumb trails are fixed by the
+   * vault "rename" listener (repairBoardRefs), since Obsidian can't see those JSON paths. */
+  renameBoard(file: TFile) {
     new TextPromptModal(this.app, "Rename board", file.basename, async (name) => {
       if (!name || name === file.basename) return;
       const prefix = file.parent && file.parent.path !== "/" ? file.parent.path + "/" : "";

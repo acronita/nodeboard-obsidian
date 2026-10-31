@@ -66,9 +66,12 @@ export async function onDrop(view: BoardView, e: DragEvent) {
 export async function onPaste(view: BoardView, e: ClipboardEvent) {
   const target = e.target as HTMLElement;
   if (target.closest("input, textarea, [contenteditable=true]")) return;
-  const files = Array.from(e.clipboardData?.files ?? []);
+  const files = clipboardFiles(e);
   if (files.length) {
     e.preventDefault();
+    // a copied image/file is what the user wants now, not the board's own clipboard
+    if (view.pendingInternalPaste !== null) window.clearTimeout(view.pendingInternalPaste);
+    view.pendingInternalPaste = null;
     const c = view.viewCenter();
     let off = 0;
     for (const f of files) {
@@ -87,6 +90,26 @@ export async function onPaste(view: BoardView, e: ClipboardEvent) {
       view.addItem({ type: "note", text }, c.x, c.y);
     }
   }
+}
+
+/** files on the clipboard (a screenshot, a copied image or OS file). Images get
+ * Obsidian's "Pasted image <timestamp>" name: clipboard images are all "image.png". */
+function clipboardFiles(e: ClipboardEvent): File[] {
+  const data = e.clipboardData;
+  if (!data) return [];
+  let files = Array.from(data.files);
+  if (!files.length) {
+    files = Array.from(data.items)
+      .filter((i) => i.kind === "file")
+      .map((i) => i.getAsFile())
+      .filter((f): f is File => !!f);
+  }
+  const stamp = window.moment().format("YYYYMMDDHHmmss");
+  return files.map((f) => {
+    if (!f.type.startsWith("image/") || (f.name && f.name !== "image.png")) return f;
+    const ext = f.type.split("/")[1]?.replace("jpeg", "jpg").replace("svg+xml", "svg") || "png";
+    return new File([f], `Pasted image ${stamp}.${ext}`, { type: f.type });
+  });
 }
 
 export async function importOsFile(view: BoardView, f: File, x: number, y: number) {

@@ -6,7 +6,7 @@ import { TextPromptModal } from "./modals";
 import { CARD_COLORS, colorOf, Edge, Item, TITLE_ELIGIBLE_TYPES } from "./types";
 
 /** types that don't get a card-color / accent-color control (same as the old context menu) */
-const COLOR_EXCLUDED_TYPES = ["swatch", "column"];
+const COLOR_EXCLUDED_TYPES = ["swatch"];
 
 /** icon button; opens a popover with the CARD_COLORS presets + a custom picker
  * (same layout as the Draw/Sketch color control) and applies to the selection */
