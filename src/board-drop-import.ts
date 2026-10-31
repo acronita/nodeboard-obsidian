@@ -115,7 +115,7 @@ function clipboardFiles(e: ClipboardEvent): File[] {
 export async function importOsFile(view: BoardView, f: File, x: number, y: number) {
   if (!f || !f.name) return;
   const buf = await f.arrayBuffer();
-  const base = normalizePath(view.plugin.settings.assetsFolder?.trim() || "Maguilanote Assets");
+  const base = normalizePath(view.plugin.settings.assetsFolder?.trim() || "Nodeboard Assets");
   if (!view.app.vault.getAbstractFileByPath(base)) {
     await view.app.vault.createFolder(base).catch(() => {});
   }

@@ -4,7 +4,7 @@ import {
   WorkspaceLeaf,
   setIcon,
 } from "obsidian";
-import type MaguilanotePlugin from "./main";
+import type NodeboardPlugin from "./main";
 import { ColorPromptModal, SettingsModal, TextPromptModal } from "./modals";
 import { cancelTodoDrags, clearRecordAudio, drawEdgesFn, renderCardFn } from "./render";
 import { ensureGoogleFont, fontFamilyValue } from "./fonts";
@@ -101,7 +101,7 @@ import {
 export const VIEW_TYPE_BOARD = "maguilanote-board";
 
 export class BoardView extends TextFileView {
-  plugin: MaguilanotePlugin;
+  plugin: NodeboardPlugin;
   // NEVER name this "data": TextFileView.save() assigns `this.data = getViewData()`
   // (a string), which used to clobber our object and freeze the board.
   board: BoardData = { version: 1, items: [], edges: [] };
@@ -180,7 +180,7 @@ export class BoardView extends TextFileView {
   private toolDragCancel: (() => void) | null = null;
   private toolDragEndedAt = 0;
 
-  constructor(leaf: WorkspaceLeaf, plugin: MaguilanotePlugin) {
+  constructor(leaf: WorkspaceLeaf, plugin: NodeboardPlugin) {
     super(leaf);
     this.plugin = plugin;
   }
@@ -524,7 +524,7 @@ export class BoardView extends TextFileView {
     zbtn("download", "Export current board as template", () => this.plugin.exportBoardAsTemplate(this));
     zbtn("upload", "Import template (replaces this board)", () => this.plugin.openImportTemplateDialog(this));
     zb.createDiv({ cls: "mgn-vsep" });
-    zbtn("settings", "Maguilanote settings", () => new SettingsModal(this.app, this.plugin).open());
+    zbtn("settings", "Nodeboard settings", () => new SettingsModal(this.app, this.plugin).open());
 
     // search bar
     this.searchEl = root.createDiv({ cls: "mgn-search" });

@@ -70,8 +70,8 @@ const header =
   `"use strict";\n` +
   `const { ${[...obsidianImports].sort().join(", ")} } = require("obsidian");\n\n`;
 const footer =
-  `\nmodule.exports = MaguilanotePlugin;\n` +
-  `module.exports.default = MaguilanotePlugin;\n`;
+  `\nmodule.exports = NodeboardPlugin;\n` +
+  `module.exports.default = NodeboardPlugin;\n`;
 
 writeFileSync("main.js", header + chunks.join("\n\n") + footer);
 console.log("main.js written (" + (header.length + footer.length + chunks.join("").length) + " bytes)");

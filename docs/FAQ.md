@@ -8,7 +8,7 @@ Edit `CARD_COLORS` in `src/types.ts`. Each entry is `{ key, name, bg, fg }` — 
 
 ### How do I change the default width of a new note?
 
-`DEFAULT_SETTINGS.defaultNoteWidth` in `src/main.ts`. It's also exposed as a plugin setting (Settings → Maguilanote), so users can override it without touching code.
+`DEFAULT_SETTINGS.defaultNoteWidth` in `src/main.ts`. It's also exposed as a plugin setting (Settings → Nodeboard), so users can override it without touching code.
 
 ### How do I change the default grid size / snap-to-grid behavior?
 
@@ -41,7 +41,7 @@ It calls the OpenAI Whisper API (`whisper-1`) with the API key from Settings →
 
 ### Where is the OpenAI API key actually stored — is it in my vault?
 
-On desktop, no: `src/secrets.ts` writes it to `~/.maguilanote/secrets.json`, outside any vault, specifically so a vault backup/sync doesn't carry your key along. It's still plaintext on disk (no OS keychain integration), just not vault-bound. On mobile there's no filesystem access outside the vault, so it falls back to `MaguilanoteSettings.openaiApiKey` in the vault's `data.json` — the Settings screen says so. `MaguilanotePlugin.getOpenAiApiKey()` is the single place that decides which source to read.
+On desktop, no: `src/secrets.ts` writes it to `~/.maguilanote/secrets.json`, outside any vault, specifically so a vault backup/sync doesn't carry your key along. It's still plaintext on disk (no OS keychain integration), just not vault-bound. On mobile there's no filesystem access outside the vault, so it falls back to `NodeboardSettings.openaiApiKey` in the vault's `data.json` — the Settings screen says so. `NodeboardPlugin.getOpenAiApiKey()` is the single place that decides which source to read.
 
 ### How do I change which file extensions are treated as images/audio/video?
 
@@ -49,7 +49,7 @@ On desktop, no: `src/secrets.ts` writes it to `~/.maguilanote/secrets.json`, out
 
 ### How do I change keyboard shortcuts?
 
-Users rebind keyboard shortcuts themselves: gear icon next to the breadcrumb trail → **Settings** → **Shortcuts**. Bindings are stored in `MaguilanoteSettings.keybindings` (`src/main.ts`), keyed by `ShortcutActionId`. To add a new rebindable action: add the id to `ShortcutActionId`, its label to `SHORTCUT_LABELS`, and its default to `DEFAULT_KEYBINDINGS` (all in `src/types.ts`), then check `matchesBinding(e, kb.<id>)` in `onKeyDown` in `src/board-view.ts`. Mouse/gesture-only shortcuts (not key-based) are the static `MOUSE_SHORTCUTS` reference table in `src/modals.ts` (`SettingsModal`).
+Users rebind keyboard shortcuts themselves: gear icon next to the breadcrumb trail → **Settings** → **Shortcuts**. Bindings are stored in `NodeboardSettings.keybindings` (`src/main.ts`), keyed by `ShortcutActionId`. To add a new rebindable action: add the id to `ShortcutActionId`, its label to `SHORTCUT_LABELS`, and its default to `DEFAULT_KEYBINDINGS` (all in `src/types.ts`), then check `matchesBinding(e, kb.<id>)` in `onKeyDown` in `src/board-view.ts`. Mouse/gesture-only shortcuts (not key-based) are the static `MOUSE_SHORTCUTS` reference table in `src/modals.ts` (`SettingsModal`).
 
 ### How do I change font / theme / color defaults?
 
@@ -57,15 +57,15 @@ Users rebind keyboard shortcuts themselves: gear icon next to the breadcrumb tra
 
 ### How do I change the default templates folder name?
 
-`DEFAULT_SETTINGS.templatesFolder` in `src/main.ts` (default: `"Maguilanote Templates"`). Also a user-facing setting.
+`DEFAULT_SETTINGS.templatesFolder` in `src/main.ts` (default: `"Nodeboard Templates"`). Also a user-facing setting.
 
 ### Where do dropped files, images and recordings get saved?
 
-Into the **Assets folder** — `DEFAULT_SETTINGS.assetsFolder` in `src/main.ts` (default: `"Maguilanote Assets"`), a user-facing setting next to the templates folder. Read by `importOsFile` (`src/board-drop-import.ts`) and `saveAssetBinary` (`src/record-card.ts`); the folder is created on first use. Assets unpacked from a `.board.template` are the one exception — they land next to the imported board so a bundle stays self-contained (`unbundleTemplate` in `src/template-bundle.ts`).
+Into the **Assets folder** — `DEFAULT_SETTINGS.assetsFolder` in `src/main.ts` (default: `"Nodeboard Assets"`), a user-facing setting next to the templates folder. Read by `importOsFile` (`src/board-drop-import.ts`) and `saveAssetBinary` (`src/record-card.ts`); the folder is created on first use. Assets unpacked from a `.board.template` are the one exception — they land next to the imported board so a bundle stays self-contained (`unbundleTemplate` in `src/template-bundle.ts`).
 
 ### How do I export or import a template?
 
-Zoombar (bottom bar) → the download/upload icons next to Snap to grid. Export ("Save current board as template" as a command too) takes the currently open board, walks it recursively (nested board cards, images, files, recordings), and packs everything into one `<name>.board.template` file in the templates folder — a single portable, self-contained file, unlike a plain `.board` copy which breaks the moment the board references anything outside itself. **Import replaces the board you have open**: it reads a `.board.template` from anywhere (file picker restricted to that extension), and after a confirmation modal (cancellable — a template file can bundle files of any type) unpacks it next to your current board, opens the result in its place, and deletes the board it replaced according to your Settings → Files and links → Deleted files preference. To add a template to your library *without* replacing anything, use the "New board from template" command instead — it picks from `.board.template` files already in the templates folder and opens the unpacked result as a new board next to the active file. Format and logic live in `src/template-bundle.ts` (`TemplateBundle`, `collectBundle`, `unbundleTemplate`); wiring in `MaguilanotePlugin.exportBoardAsTemplate()` / `.importTemplateFile()` / `.openImportTemplateDialog()` in `src/main.ts`.
+Zoombar (bottom bar) → the download/upload icons next to Snap to grid. Export ("Save current board as template" as a command too) takes the currently open board, walks it recursively (nested board cards, images, files, recordings), and packs everything into one `<name>.board.template` file in the templates folder — a single portable, self-contained file, unlike a plain `.board` copy which breaks the moment the board references anything outside itself. **Import replaces the board you have open**: it reads a `.board.template` from anywhere (file picker restricted to that extension), and after a confirmation modal (cancellable — a template file can bundle files of any type) unpacks it next to your current board, opens the result in its place, and deletes the board it replaced according to your Settings → Files and links → Deleted files preference. To add a template to your library *without* replacing anything, use the "New board from template" command instead — it picks from `.board.template` files already in the templates folder and opens the unpacked result as a new board next to the active file. Format and logic live in `src/template-bundle.ts` (`TemplateBundle`, `collectBundle`, `unbundleTemplate`); wiring in `NodeboardPlugin.exportBoardAsTemplate()` / `.importTemplateFile()` / `.openImportTemplateDialog()` in `src/main.ts`.
 
 ### Where is the board file format defined, and is it stable?
 

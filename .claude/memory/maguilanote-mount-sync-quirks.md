@@ -1,13 +1,13 @@
 ---
 name: maguilanote-mount-sync-quirks
-description: Sandbox mount truncates in-place edits of files in the Maguilanote project; workarounds
+description: Sandbox mount truncates in-place edits of files in the Nodeboard project; workarounds
 metadata: 
   node_type: memory
   type: project
   originSessionId: e710e195-c00a-4bae-ba10-3a86791c3eb9
 ---
 
-In the Maguilanote project (Cowork, Windows), the sandbox mount view of files edited in place via Write/Edit gets clamped to the file's OLD byte size: longer content is truncated, shorter content is NUL-padded. The Windows side is always correct. npm registry and CDNs are blocked in the sandbox; builds use Node 22's `stripTypeScriptTypes` via a script in /tmp (see build-local.mjs pattern).
+In the Nodeboard project (Cowork, Windows), the sandbox mount view of files edited in place via Write/Edit gets clamped to the file's OLD byte size: longer content is truncated, shorter content is NUL-padded. The Windows side is always correct. npm registry and CDNs are blocked in the sandbox; builds use Node 22's `stripTypeScriptTypes` via a script in /tmp (see build-local.mjs pattern).
 
 **Why:** builds from truncated sources fail or silently produce broken bundles.
 

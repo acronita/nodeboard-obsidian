@@ -1,5 +1,5 @@
 import { Platform, Setting } from "obsidian";
-import type MaguilanotePlugin from "./main";
+import type NodeboardPlugin from "./main";
 import { loadOpenAiApiKey, saveOpenAiApiKey } from "./secrets";
 import {
   CARD_COLOR_NAMES,
@@ -42,10 +42,10 @@ const MOUSE_SHORTCUTS: [string, string][] = [
 
 /**
  * Shared settings UI, rendered identically into the Obsidian plugin settings
- * tab (`MaguilanoteSettingTab`) and the in-board Settings modal (`SettingsModal`)
+ * tab (`NodeboardSettingTab`) and the in-board Settings modal (`SettingsModal`)
  * so both surfaces always show the same options.
  */
-export function renderSettingsUI(containerEl: HTMLElement, plugin: MaguilanotePlugin) {
+export function renderSettingsUI(containerEl: HTMLElement, plugin: NodeboardPlugin) {
   containerEl.empty();
   const s = plugin.settings;
   const save = async () => {
@@ -95,7 +95,7 @@ export function renderSettingsUI(containerEl: HTMLElement, plugin: MaguilanotePl
     .setName("Templates folder")
     .addText((t) =>
       t.setValue(s.templatesFolder).onChange(async (v) => {
-        s.templatesFolder = v || "Maguilanote Templates";
+        s.templatesFolder = v || "Nodeboard Templates";
         await save();
       })
     );
@@ -105,7 +105,7 @@ export function renderSettingsUI(containerEl: HTMLElement, plugin: MaguilanotePl
     .setDesc("Where dropped files, images and recordings are saved.")
     .addText((t) =>
       t.setValue(s.assetsFolder).onChange(async (v) => {
-        s.assetsFolder = v || "Maguilanote Assets";
+        s.assetsFolder = v || "Nodeboard Assets";
         await save();
       })
     );
@@ -257,7 +257,7 @@ export function renderSettingsUI(containerEl: HTMLElement, plugin: MaguilanotePl
 }
 
 function recordBinding(
-  plugin: MaguilanotePlugin,
+  plugin: NodeboardPlugin,
   id: ShortcutActionId,
   btn: HTMLButtonElement,
   render: () => void,
