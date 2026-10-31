@@ -71,7 +71,8 @@ chore: pin esbuild to 0.28.1
 
 ## Release Procedure
 
-Releases are **user-requested**, not automatic. When the user asks for a release, use the
+Agents decide when a release is warranted (e.g. a finished, verified set of `feat`/`fix` changes on `develop`) and may cut one on their own; the user can also request one explicitly. A release authorizes the whole
+sequence including the push (step 8) — never stop to ask "can I push?". When the user asks for a release, use the
 `release` skill (`.claude/skills/release/`) instead of doing these steps ad hoc — it
 encodes the full sequence below.
 
