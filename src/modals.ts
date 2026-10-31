@@ -1,5 +1,5 @@
 import { App, FuzzySuggestModal, Modal, Setting, TFile } from "obsidian";
-import type MaguilanotePlugin from "./main";
+import type NodeboardPlugin from "./main";
 import { renderSettingsUI } from "./settings-ui";
 
 export class TextPromptModal extends Modal {
@@ -129,12 +129,12 @@ export class VaultFilePicker extends FuzzySuggestModal<TFile> {
 }
 
 export class SettingsModal extends Modal {
-  constructor(app: App, private plugin: MaguilanotePlugin) {
+  constructor(app: App, private plugin: NodeboardPlugin) {
     super(app);
   }
 
   onOpen() {
-    this.titleEl.setText("Maguilanote settings");
+    this.titleEl.setText("Nodeboard settings");
     this.modalEl.addClass("mgn-settings-modal");
     renderSettingsUI(this.contentEl, this.plugin);
   }
