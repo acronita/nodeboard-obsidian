@@ -1,6 +1,6 @@
 {
   "name": "nodeboard",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Visual workspace boards for Obsidian",
   "main": "main.js",
   "type": "module",
