@@ -1,6 +1,7 @@
 import {
   TFile,
   TextFileView,
+  ViewStateResult,
   WorkspaceLeaf,
   setIcon,
 } from "obsidian";
@@ -244,6 +245,29 @@ export class BoardView extends TextFileView {
     if (this.pendingNav !== file.path) this.crumbs = [];
     this.pendingNav = null;
     await super.onLoadFile(file);
+  }
+
+  // the trail rides along in the leaf's view state, so it survives an app
+  // restart (workspace.json) and Obsidian's back/forward navigation
+  getState(): Record<string, unknown> {
+    return { ...super.getState(), crumbs: this.crumbs };
+  }
+
+  async setState(state: unknown, result: ViewStateResult): Promise<void> {
+    const s = state as { file?: unknown; crumbs?: unknown };
+    if (typeof s?.file === "string" && Array.isArray(s.crumbs)) {
+      // drop entries whose board was deleted while the trail was saved
+      this.crumbs = [];
+      for (const c of s.crumbs as { path?: unknown }[]) {
+        const f = typeof c?.path === "string" ? this.app.vault.getAbstractFileByPath(c.path) : null;
+        if (f instanceof TFile) this.crumbs.push({ path: f.path, name: f.basename });
+      }
+      this.pendingNav = s.file;
+    }
+    await super.setState(state, result);
+    // the file may already be loaded (onLoadFile skipped), so clear + redraw here
+    this.pendingNav = null;
+    this.renderCrumbs();
   }
 
   /** open another .board in THIS view, pushing current board onto the trail */

@@ -4,6 +4,10 @@ Living log of significant changes to the project. This is **not** optional bookk
 
 Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
+## 2026-10-31 (unreleased fix, pending runtime test)
+
+- **Nested-board breadcrumb trail survives an Obsidian restart.** Closing Obsidian while inside a nested board reopened it with no trail, as if it were a top-level board. `BoardView` now stores the trail in the leaf's view state (`getState`/`setState`), which Obsidian persists in `workspace.json` and also replays on back/forward navigation. Trail entries whose board was deleted are dropped on restore. Files touched: `src/board-view.ts`, `docs/CHANGELOG.md`.
+
 ## 2026-10-31
 
 - **Graph view integration removed; limitation documented in the FAQ (issue #4 stays open).** The experimental "Graph view integration" setting (never released, planned for 1.3.0) is gone. It wrote board links into `app.metadataCache.resolvedLinks`, but that did not make `.board` files appear in Obsidian's graph in the real app, and Obsidian's graph only indexes its own formats. The limitation, the workarounds and the open options (migrate to `.canvas`, a `.canvas` mirror, or `.md` proxy notes) are now in the FAQ entry "Why don't my boards show up in graph view?". Version stays 1.2.0. Files touched: `docs/FAQ.md`, `docs/CHANGELOG.md`.
