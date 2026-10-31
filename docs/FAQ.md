@@ -2,6 +2,15 @@
 
 Practical "where do I go to change X" answers. For the how-things-fit-together view, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
+### Why don't my boards show up in graph view?
+
+Boards are `.board` files (JSON with their own extension). Obsidian's graph view only indexes its own formats, so boards don't appear as nodes and their links don't draw edges. An experimental attempt to write the links into Obsidian's link index (`resolvedLinks`) did not make boards show up in the real app, so it was removed. Plugins that do appear in the graph, like Visual Notes, write native `.canvas` files; plugins with their own extension, like Icon Board with `.iboard`, have the same limitation. Fixing it would mean migrating the format to `.canvas`, generating a `.canvas` mirror, or using `.md` proxy notes, and none of these is decided. Issue #4 tracks this.
+
+Possible workarounds, neither verified in Obsidian (check them in your own vault before relying on them):
+
+- Create a note that links to the `.board` file with a wikilink. With the graph's "Attachments" filter on, the board may show up as an attachment node, though its inner links will not.
+- Run "Export current board to Markdown" or "Export current board to JSON Canvas" from the command palette. The exported file is a regular note or canvas, which Obsidian does index (how much of a canvas appears in the graph depends on your Obsidian version).
+
 ### How do I change the available card colors?
 
 Edit `CARD_COLORS` in `src/types.ts`. Each entry is `{ key, name, bg, fg }` — `key` is what gets stored in the board file, `bg`/`fg` are the background/text colors shown in the color picker (`bg`/`fg` can be a plain hex or a `var(--...)` CSS variable, like the `"default"` entry does to stay theme-adaptive). Add, remove, or restyle entries there; the color picker UI reads this array directly, nothing else needs to change. If you remove a `key` that might already be stored in existing boards, add an alias for it in `LEGACY_COLOR_ALIASES` (same file) so old boards keep resolving to a valid color instead of silently falling back to index 0.
