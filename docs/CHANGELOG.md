@@ -4,6 +4,10 @@ Living log of significant changes to the project. This is **not** optional bookk
 
 Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
+## 2026-10-31
+
+- **Graph view integration removed; limitation documented in the FAQ (issue #4 stays open).** The experimental "Graph view integration" setting (never released, planned for 1.3.0) is gone. It wrote board links into `app.metadataCache.resolvedLinks`, but that did not make `.board` files appear in Obsidian's graph in the real app, and Obsidian's graph only indexes its own formats. The limitation, the workarounds and the open options (migrate to `.canvas`, a `.canvas` mirror, or `.md` proxy notes) are now in the FAQ entry "Why don't my boards show up in graph view?". Version stays 1.2.0. Files touched: `docs/FAQ.md`, `docs/CHANGELOG.md`.
+
 ## 2026-10-31 (1.2.0)
 
 - **Plugin renamed from Maguilanote to Nodeboard.** The display name, UI strings and class names now say Nodeboard, and the new logo is in. Default folders are now `Nodeboard Templates` and `Nodeboard Assets`, but only for users who never saved a custom value: existing saved folder settings are untouched and existing boards keep working. The repo moved to the acronita org and was renamed `nodeboard-obsidian`, and references to the original inspiration product were removed from the docs and UI. Internal ids are unchanged for compatibility: plugin id `maguilanote` (install folder `plugins/maguilanote/`), view type `maguilanote-board`, template format `maguilanote-template`, and secrets file `~/.maguilanote/secrets.json`. Files touched: `src/**`, `manifest.json`, `package.json`, `build-local.mjs`, `eslint.config.mjs`, `README.md`, `CONTRIBUTING.md`, `docs/**`, `.claude/memory/**`, `logo.png`.
