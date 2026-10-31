@@ -1,12 +1,14 @@
-![Maguilanote Logo](https://github.com/is-cout/maguilanote-obsidian/blob/main/logo.png)
+![Nodeboard Logo](https://github.com/acronita/nodeboard-obsidian/blob/main/logo.png)
 
-A Milanote-style visual workspace for [Obsidian](https://obsidian.md): notes, images, links, files, columns, to-do lists, color swatches, comments, audio recordings, nested boards and arrows on an infinite canvas, entirely inside your vault.
+Formerly Maguilanote.
+
+A visual workspace for [Obsidian](https://obsidian.md): notes, images, links, files, columns, to-do lists, color swatches, comments, audio recordings, nested boards and arrows on an infinite canvas, entirely inside your vault.
 
 **Local-first by design.** Each board is a single `.board` JSON file in your vault. There's no account, no server, and no real-time collaboration; sync your vault however you already do (Obsidian Sync, Git, Syncthing, a shared folder...). Cloud collaboration is out of scope for this project, not a missing feature.
 
 ## Demo
 
-![Maguilanote Demo Gif](https://github.com/is-cout/maguilanote-obsidian/blob/main/demo.gif)
+![Nodeboard Demo Gif](https://github.com/acronita/nodeboard-obsidian/blob/main/demo.gif)
 
 ## Features
 
@@ -58,12 +60,12 @@ A Milanote-style visual workspace for [Obsidian](https://obsidian.md): notes, im
 
 ## Manual installation
 
-1. Copy `main.js`, `manifest.json` and `styles.css` to `YOUR_VAULT/.obsidian/plugins/maguilanote/`.
-2. In Obsidian → Settings → Community plugins, enable **Maguilanote**.
+1. Copy `main.js`, `manifest.json` and `styles.css` to `YOUR_VAULT/.obsidian/plugins/maguilanote/`. The folder keeps the old `maguilanote` name because it is the plugin id, which existing installs depend on.
+2. In Obsidian → Settings → Community plugins, enable **Nodeboard**.
 
 ## Usage
 
-- The ribbon icon or the **"Maguilanote: New board"** command creates a `.board` file.
+- The ribbon icon or the **"Nodeboard: New board"** command creates a `.board` file.
 - **Double-click the board's name in the breadcrumb trail to rename it** — Markdown links and nested-board references across your vault update automatically.
 - Double-click the canvas to create a note. On phones and iPad, tap a card (or line) to select it and double-tap to open/edit it (double-tap empty canvas for a new note); a finger drag on a selected card moves it, any other finger drag pans; the resize and arrow handles show on the selected card. Apple Pencil manipulates cards directly; pinch or two fingers zoom/pan, and long-press a card for its context menu. The left toolbar adds every other card type — **drag** a tool onto the canvas to create it where you drop it or tap/click it to create it at the center of the view (handy on phones). Draw is the exception: click it (or press `D`) to enter draw mode. On devices without a pen (phones) a finger draws; once Apple Pencil has been used, touch never draws (palm rejection).
 - Click a card to select it; drag to move. Inputs inside a card only activate once it is selected. Double-click to edit/open.

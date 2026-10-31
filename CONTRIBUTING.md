@@ -1,10 +1,10 @@
 # Contributing
 
-Thanks for your interest in Maguilanote! Bug reports, ideas and pull requests are all welcome.
+Thanks for your interest in Nodeboard! Bug reports, ideas and pull requests are all welcome.
 
 ## Reporting bugs and requesting features
 
-Open an [issue](https://github.com/is-cout/maguilanote-obsidian/issues). For bugs, include:
+Open an [issue](https://github.com/acronita/nodeboard-obsidian/issues). For bugs, include:
 
 - Plugin version, Obsidian version, and platform (Windows / macOS / Linux / iPadOS / Android).
 - Steps to reproduce, what you expected, and what happened.

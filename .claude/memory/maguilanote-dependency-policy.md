@@ -1,13 +1,13 @@
 ---
 name: maguilanote-dependency-policy
-description: "Maguilanote: dependencies are always pinned exactly, never @latest or auto-updated"
+description: "Nodeboard: dependencies are always pinned exactly, never @latest or auto-updated"
 metadata: 
   node_type: memory
   type: feedback
   originSessionId: 8180bce5-51a4-4667-a870-0abf3e3bed75
 ---
 
-In the Maguilanote project, all `package.json` dependency versions must be pinned exactly (no `^`/`~` ranges). Never install `@latest`, never run an automatic update, never bump a version — even a patch/security fix — without asking the user first and getting explicit approval. This is codified directly in the project's `.claude/CLAUDE.md` ("Dependency Policy" section) and in `docs/DEPENDENCIES.md`, added 2026-07-07 when preparing the repo for its first GitHub push.
+In the Nodeboard project, all `package.json` dependency versions must be pinned exactly (no `^`/`~` ranges). Never install `@latest`, never run an automatic update, never bump a version — even a patch/security fix — without asking the user first and getting explicit approval. This is codified directly in the project's `.claude/CLAUDE.md` ("Dependency Policy" section) and in `docs/DEPENDENCIES.md`, added 2026-07-07 when preparing the repo for its first GitHub push.
 
 **Why:** an Obsidian plugin runs with filesystem access inside every user's vault; unreviewed dependency drift (or a compromised package version) is a real supply-chain risk, and the user wants an explicit approval step on every version change, not silent convenience updates.
 
