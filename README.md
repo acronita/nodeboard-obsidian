@@ -13,7 +13,7 @@ A visual workspace for [Obsidian](https://obsidian.md): notes, images, links, fi
 ## Features
 
 **Boards**
-- Infinite canvas, nested boards with breadcrumb, board-to-board shortcuts; right-click a nested board card → "Rename board"
+- Infinite canvas, nested boards with breadcrumb (kept across restarts), board-to-board shortcuts; right-click a nested board card → "Rename board"
 - Broken-link detection, card previews, item locking, move/duplicate across boards
 - Built-in and custom templates
 
