@@ -4,6 +4,10 @@ Living log of significant changes to the project. This is **not** optional bookk
 
 Format: `YYYY-MM-DD — short description. Why (if not obvious). Files touched.`
 
+## 2026-11-20 (1.2.2)
+
+- **Re-release with no code changes.** 1.2.0 and 1.2.1 failed Obsidian's automated review after the repo moved from `is-cout/maguilanote` to `acronita/nodeboard-obsidian`; a fresh release triggers a new review against the current repo. Files touched: `package.json`, `package-lock.json`, `manifest.json`, `versions.json`, `docs/CHANGELOG.md`.
+
 ## 2026-10-31 (1.2.1)
 
 - **Nested-board breadcrumb trail survives an Obsidian restart.** Closing Obsidian while inside a nested board reopened it with no trail, as if it were a top-level board. `BoardView` now stores the trail in the leaf's view state (`getState`/`setState`), which Obsidian persists in `workspace.json` and also replays on back/forward navigation. Trail entries whose board was deleted are dropped on restore. Files touched: `src/board-view.ts`, `docs/CHANGELOG.md`.
